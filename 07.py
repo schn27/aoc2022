@@ -1,7 +1,7 @@
 from aocd import lines
 from aocd import submit
 
-root = {'..': None}
+root = {}
 current = root
 
 def cd(current, child):
@@ -13,25 +13,13 @@ def cd(current, child):
 
     return current[child]
 
-read_ls = False
-
 for line in lines:
-    if read_ls and line[0] != '$':
-        a, b = line.split()
-        if a == 'dir':
-            cd(current, b)
-        else:
-            current[b] = int(a)
-
-    else:
-        read_ls = False
-
-    if line[0] == '$':
-        cmd, *arg = line[2:].split()
-        if cmd == 'cd':
-            current = cd(current, arg[0])
-        else:
-            read_ls = True
+    w = line.split()
+    if w[0] == '$':
+        if w[1] == 'cd':
+            current = cd(current, w[2])
+    elif w[0] != 'dir':
+        current[w[1]] = int(w[0])
 
 def get_sizes(current, sizes):
     total = 0

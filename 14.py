@@ -15,8 +15,8 @@ for wall in walls:
         dx = min(max(x1 - x, -1), 1)
         dy = min(max(y1 - y, -1), 1)
         while y != y1 + dy or x != x1 + dx:
-            max_y = max(max_y, y0)
-            world.add((x0, y0))
+            max_y = max(max_y, y)
+            world.add((x, y))
             x += dx
             y += dy
 
@@ -25,14 +25,18 @@ x, y = start_x, start_y
 cnt_a = None
 cnt_b = 0
 
+branches = []
+
 while not (start_x, start_y) in world:
     left, down, right = (x - 1, y + 1) in world, (x, y + 1) in world, (x + 1, y + 1) in world
     if (left and down and right) or (y + 1 == max_y + 2):
         world.add((x, y))
         cnt_b += 1
         x, y = start_x, start_y
+        x, y = branches.pop() if len(branches) else (start_x, start_y)
     else:
         if down:
+            branches.append((x, y))
             x += 1 if left else -1
         y += 1
 

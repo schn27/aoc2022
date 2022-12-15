@@ -4,16 +4,16 @@ import re
 
 sensors = list(map(lambda e: list(map(int, re.findall(r'-?\d+', e))), lines))
 
-def get_sensors_in_range(x, y):
-    return len(list(filter(lambda e:
-        abs(x - e[0]) + abs(y - e[1]) <= abs(e[2] - e[0]) + abs(e[3] - e[1]), sensors)))
+def not_in_range(x, y):
+    return all(map(lambda e:
+        abs(x - e[0]) + abs(y - e[1]) > abs(e[2] - e[0]) + abs(e[3] - e[1]), sensors))
 
 def get_invisible_pos(sx, sy, d, xy_checker):
     x = sx
     y = sy - d - 1
     for dx, dy in [(1, 1), (-1, 1), (-1, -1), (1, -1)]:
         for i in range(d):
-            if xy_checker(x, y) and get_sensors_in_range(x, y) == 0:
+            if xy_checker(x, y) and not_in_range(x, y):
                 return x, y
             x += dx
             y += dy

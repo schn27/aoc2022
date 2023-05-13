@@ -55,29 +55,23 @@ def wrap_cube(faces):
 
     while not done:
         done = True
-        for x, y in faces:
-            f = faces[(x, y)]
+
+        for f in faces.values():
             for i, d in enumerate(RDLU):
                 if f[i] is None:
-                    left = f[(i - 1) % len(f)]
-                    right = f[(i + 1) % len(f)]
                     third_face, third_rot = None, None
 
-                    if not (left is None):
-                        face, rot = left
-                        side = (i - rot) % len(f)
-                        if not (faces[face][side] is None):
-                            third_face, third_rot = faces[face][side]
-                            third_rot += rot + 1
+                    for lr in [-1, 1]:
+                        lr_face = f[(i + lr) % len(f)]
 
-                    if not (right is None):
-                        face, rot = right
-                        side = (i - rot) % len(f)
-                        if not (faces[face][side] is None):
-                            third_face, third_rot = faces[face][side]
-                            third_rot += rot - 1
+                        if lr_face is not None:
+                            face, rot = lr_face
+                            side = (i - rot) % len(f)
+                            if faces[face][side] is not None:
+                                third_face, third_rot = faces[face][side]
+                                third_rot += rot + (-lr)
 
-                    if not (third_face is None):
+                    if third_face is not None:
                         f[i] = (third_face, third_rot % len(RDLU))
                         done = False
 
